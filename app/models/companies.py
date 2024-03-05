@@ -11,7 +11,7 @@ class CreateCompany(BaseModel):
     planning : list[CreateActivity] | None = None
 
 class Company(CreateCompany):
-    _id: int | None = None
+    _id: str
 
 #local imports (here to avoid circular import problems)
 from models.users import CreateUser
