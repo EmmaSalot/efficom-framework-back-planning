@@ -19,7 +19,7 @@ def get_companies_collection():
     return db['companies']
 
 def get_planings_collection():
-    return db['planings']
+    return db['plannings']
 
 
 # document = {'key': 'value'}
