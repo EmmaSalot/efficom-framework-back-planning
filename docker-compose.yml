@@ -13,10 +13,10 @@ services:
       - RELOAD=true
     # command: /bin/sh -c "/start-reload.sh" # For production, this line should be removed (no need for hot reload)
 
-  init-db:
-    build:
-      context: .
-      target: 'develop-stage'
-    depends_on:
-      - back-end
-    command: python database.py
+  # init-db:
+  #   build:
+  #     context: .
+  #     target: 'develop-stage'
+  #   depends_on:
+  #     - back-end
+  #   command: python database.py
