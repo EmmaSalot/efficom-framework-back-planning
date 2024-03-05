@@ -1,8 +1,9 @@
+#system imports
+from __future__ import annotations
+
 # libs import
 from pydantic import BaseModel
-from companies import CreateCompany
-from activities import CreateActivity
-from typing import List
+
 
 class CreateUser(BaseModel):
     surname : str
@@ -10,7 +11,11 @@ class CreateUser(BaseModel):
     email: str
     password: str
     company : CreateCompany
-    activities : List[CreateActivity]
+    activities : list[CreateActivity]
 
 class User(CreateUser):
     id: int
+    
+#local import
+from models.activities import CreateActivity
+from models.companies import CreateCompany

@@ -7,7 +7,6 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from bson import ObjectId 
 
 # Local imports
-from internal.auth import get_decoded_token
 from models.users import CreateUser, User
 from database import get_users_collection
 
@@ -15,7 +14,7 @@ router= APIRouter()
 users_collection = get_users_collection()
 
 @router.get("/users", response_model_exclude_unset=True)
-async def getUsers(connected_user_email: Annotated[str, Depends(get_decoded_token)]) -> list[User]:
+async def getUsers() -> list[User]:
     """
     Endpoint to return all users
     """
