@@ -19,4 +19,4 @@ services:
       target: 'develop-stage'
     depends_on:
       - back-end
-    command: python /app/database.py
+    command: python database.py
