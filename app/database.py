@@ -1,3 +1,4 @@
+#lib imports
 from pymongo import MongoClient
 
 connection_uri = 'mongodb+srv://blavoine:test@cluster0.54fdrky.mongodb.net/'

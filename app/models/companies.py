@@ -13,6 +13,6 @@ class CreateCompany(BaseModel):
 class Company(CreateCompany):
     id: int
 
-#local imports    
+#local imports (here to avoid circular import problems)
 from models.users import CreateUser
 from models.activities import CreateActivity

@@ -11,5 +11,6 @@ class CreatePlanning(BaseModel):
 class Planning(CreatePlanning):
     id: int
     
+#local imports (here to avoid circular import problems)
 from models.companies import CreateCompany
 from models.activities import CreateActivity

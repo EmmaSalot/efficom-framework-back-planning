@@ -16,6 +16,6 @@ class CreateUser(BaseModel):
 class User(CreateUser):
     id: int
     
-#local import
+#local imports (here to avoid circular import problems)
 from models.activities import CreateActivity
 from models.companies import CreateCompany

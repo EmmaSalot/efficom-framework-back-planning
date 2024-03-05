@@ -8,7 +8,6 @@ authors = ["Customs Bridge <contact@customsbridge.fr>"]
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
 fastapi = "0.110.0"
-bson = "0.5.10"
 pymongo = "4.6.2"
 
 [tool.poetry.dev-dependencies]
