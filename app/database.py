@@ -32,8 +32,6 @@ def get_planings_collection():
     return db['plannings']
 
 
-# document = {'key': 'value'}
-# collection.insert_one(document)
 # client.close()
 
 # Le bloc suivant sera exécuté uniquement si ce fichier est exécuté en tant que script principal
