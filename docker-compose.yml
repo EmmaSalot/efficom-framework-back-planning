@@ -1,4 +1,3 @@
-# for local development
 version: '3.7'
 services:
   back-end:
@@ -11,5 +10,13 @@ services:
       - './app/:/app'
     environment:
       - LOG_LEVEL=info
-      - RELOAD=true # when in use with ghcr.io/multi-py/python-uvicorn image
+      - RELOAD=true
     # command: /bin/sh -c "/start-reload.sh" # For production, this line should be removed (no need for hot reload)
+
+  init-db:
+    build:
+      context: .
+      target: 'develop-stage'
+    depends_on:
+      - back-end
+    command: python database.py
