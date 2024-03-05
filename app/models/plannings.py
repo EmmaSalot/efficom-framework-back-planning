@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 # libs import
 from pydantic import BaseModel
-from companies import CreateCompany
-from activities import CreateActivity
-from typing import List
+
 
 class CreatePlanning(BaseModel):
     company : CreateCompany
-    activities : List[CreateActivity]
+    activities : list[CreateActivity]
 
 class Planning(CreatePlanning):
     id: int
+    
+#local imports (here to avoid circular import problems)
+from models.companies import CreateCompany
+from models.activities import CreateActivity
