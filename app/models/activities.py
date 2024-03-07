@@ -1,4 +1,6 @@
 #some imports are at the end of the file to avoid circular import problems)
+#system import
+from __future__ import annotations
 # libs import
 from pydantic import BaseModel
 
