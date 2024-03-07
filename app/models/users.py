@@ -2,9 +2,14 @@
 #system imports
 from __future__ import annotations
 
-# libs import
-from pydantic import BaseModel
+#lib imports
+from pydantic import BaseModel, EmailStr, Field
+from typing import List
 
+class UserBase(BaseModel):
+    surname: str
+    name: str
+    email: EmailStr
 
 class CreateUser(BaseModel):
     surname : str | None = None
@@ -16,7 +21,19 @@ class CreateUser(BaseModel):
 
 class User(CreateUser):
     _id: str
-    
+
+class CreateUser(UserBase):
+    password: str
+
+class UserInDB(UserBase):
+    hashed_password: str
+
+class User(UserInDB):
+    id: str = Field(None, alias='_id')  # Utilisez 'alias' pour la correspondance avec MongoDB '_id'
+    company: 'CreateCompany'
+    activities: List['CreateActivity']
+      
 #local imports (here to avoid circular import problems)
 from models.activities import CreateActivity
 from models.companies import CreateCompany
+

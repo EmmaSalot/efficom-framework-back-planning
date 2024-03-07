@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 
 class CreatePlanning(BaseModel):
-    company : CreateCompany
+    company : 'CreateCompany'
     activities : list[CreateActivity]
 
 class Planning(CreatePlanning):
