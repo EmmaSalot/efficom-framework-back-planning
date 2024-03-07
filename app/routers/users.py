@@ -10,7 +10,7 @@ from fastapi import HTTPException, Depends, status
 from internal import auth
 
 # Local imports
-from models.users import CreateUser2, User2, UserInDB 
+from models.users import CreateUser2, User2, UserInDB, User, CreateUser
 from datetime import timedelta
 from database import get_users_collection
 
@@ -67,8 +67,8 @@ async def updateUser(user_id: str, updated_user: CreateUser2) -> None:
     if result.matched_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-@router.post("/users/register", response_model=User2)
-async def register(user: CreateUser2):
+@router.post("/users/register", response_model=User)
+async def register(user: CreateUser):
     db = get_users_collection()
     existing_user = db.find_one({"email": user.email})
     if existing_user:
@@ -84,7 +84,7 @@ async def register(user: CreateUser2):
 @router.post("/token", response_model=dict)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     db = get_users_collection()
-    user = auth.authenticate_user(form_data.username, form_data.password, db)
+    user = auth.authenticate_user(form_data.email, form_data.password, db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
