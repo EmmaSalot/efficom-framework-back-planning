@@ -7,6 +7,15 @@ client = MongoClient(connection_uri)
 
 db = client['Full-stack-back-end']
 
+def initialize_database():
+    """
+    Init database connection
+    """
+    
+    print("Connecting to the database...")
+    database = get_database()
+    print("Connected to the database:", database)
+
 def get_database():
     return db
 
@@ -23,8 +32,6 @@ def get_planings_collection():
     return db['plannings']
 
 
-# document = {'key': 'value'}
-# collection.insert_one(document)
 # client.close()
 
 # Le bloc suivant sera exécuté uniquement si ce fichier est exécuté en tant que script principal
