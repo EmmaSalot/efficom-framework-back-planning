@@ -11,7 +11,7 @@ class UserBase(BaseModel):
     name: str
     email: EmailStr
 
-class CreateUser(BaseModel):
+class CreateUser2(BaseModel):
     surname : str | None = None
     name : str | None = None
     email: str | None = None
@@ -19,7 +19,7 @@ class CreateUser(BaseModel):
     company : CreateCompany | None = None
     activities : list[CreateActivity] | None = None
 
-class User(CreateUser):
+class User2(CreateUser2):
     _id: str
 
 class CreateUser(UserBase):

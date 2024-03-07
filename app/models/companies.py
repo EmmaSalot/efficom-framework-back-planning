@@ -8,12 +8,12 @@ from pydantic import BaseModel
 class CreateCompany(BaseModel):
     name: str | None = None
     address : str | None = None
-    users : list[CreateUser] | None = None
+    users : list[CreateUser2] | None = None
     plannings : list[CreatePlanning] | None = None
 
 class Company(CreateCompany):
     _id: str
 
 #local imports (here to avoid circular import problems)
-from models.users import CreateUser
+from models.users import CreateUser2
 from models.plannings import CreatePlanning

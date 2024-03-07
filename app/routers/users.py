@@ -10,7 +10,7 @@ from fastapi import HTTPException, Depends, status
 from internal import auth
 
 # Local imports
-from models.users import CreateUser, User, UserInDB 
+from models.users import CreateUser2, User2, UserInDB 
 from datetime import timedelta
 from database import get_users_collection
 
@@ -19,14 +19,14 @@ users_collection = get_users_collection()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.get("/users", response_model_exclude_unset=True)
-async def getUsers() -> list[User]:
+async def getUsers() -> list[User2]:
     """
     Endpoint to return all users
     """
     return list(users_collection.find({}, {"_id": 0}))
 
 @router.get("/users/{user_id}", responses={status.HTTP_404_NOT_FOUND: {"model": str}})
-async def getUser(user_id: str) -> User:
+async def getUser(user_id: str) -> User2:
     """
     Endpoint to return a specific user based on id
     """
@@ -36,7 +36,7 @@ async def getUser(user_id: str) -> User:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
 @router.post("/users", status_code=status.HTTP_201_CREATED, responses={status.HTTP_409_CONFLICT: {"model": str}})
-async def createUser(user: CreateUser) -> User:
+async def createUser(user: CreateUser2) -> User2:
     """
     Endpoint to create a new user and add it to the list of users
     """
@@ -58,7 +58,7 @@ async def deleteUser(user_id: str) -> None:
 
 @router.put("/users/{user_id}", responses={status.HTTP_404_NOT_FOUND: {"model": str},
                                         status.HTTP_409_CONFLICT: {"model": str}})
-async def updateUser(user_id: str, updated_user: CreateUser) -> None:
+async def updateUser(user_id: str, updated_user: CreateUser2) -> None:
     existing_user = users_collection.find_one({"email": updated_user.email})
     if existing_user and existing_user["_id"] != ObjectId(user_id):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email address already exists in the system.")
@@ -67,8 +67,8 @@ async def updateUser(user_id: str, updated_user: CreateUser) -> None:
     if result.matched_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-@router.post("/users/register", response_model=User)
-async def register(user: CreateUser):
+@router.post("/users/register", response_model=User2)
+async def register(user: CreateUser2):
     db = get_users_collection()
     existing_user = db.find_one({"email": user.email})
     if existing_user:
