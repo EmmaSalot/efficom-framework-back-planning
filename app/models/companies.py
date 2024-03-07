@@ -1,3 +1,4 @@
+#some imports are at the end of the file to avoid circular import problems)
 #system imports
 from __future__ import annotations
 
@@ -8,11 +9,11 @@ class CreateCompany(BaseModel):
     name: str | None = None
     address : str | None = None
     users : list[CreateUser] | None = None
-    planning : list[CreateActivity] | None = None
+    plannings : list[CreatePlanning] | None = None
 
 class Company(CreateCompany):
     _id: str
 
 #local imports (here to avoid circular import problems)
 from models.users import CreateUser
-from models.activities import CreateActivity
+from models.plannings import CreatePlanning
