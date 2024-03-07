@@ -2,16 +2,19 @@
 #system import
 from __future__ import annotations
 # libs import
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Optional
+
 
 class CreateActivity(BaseModel):
-    day : str
-    start : str
+    day: str
+    start: str
     end: str
-    planning : CreatePlanning
+    # Utilisation d'une référence en avant et rendu optionnel
+    planning: CreatePlanning | None = None
 
 class Activity(CreateActivity):
-    id: int
-  
-#local imports (here to avoid circular import problems)
-from models.plannings import CreatePlanning
+    id: str = Field(None, alias='_id')
+
+# Les importations locales sont reportées après les définitions des classes
+from models.plannings import CreatePlanning  # Assurez-vous que ce modèle existe
