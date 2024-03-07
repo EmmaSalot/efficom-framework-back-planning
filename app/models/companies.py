@@ -5,7 +5,7 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 class CreateCompany(BaseModel):
-    name: str 
+    name: str | None = None
     address : str | None = None
     users : list[CreateUser] | None = None
     planning : list[CreateActivity] | None = None
