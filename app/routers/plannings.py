@@ -2,6 +2,7 @@
 
 # System libs imports
 from typing import Annotated
+from internal import auth
 
 # Libs imports
 from fastapi import APIRouter, HTTPException, status, Depends
@@ -21,7 +22,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 async def get_current_user_role(token: str = Depends(oauth2_scheme)):
     payload = auth.decode_token(token)
-    return payload.get("role", "user")  # Default to "user" role if role information is not present in the token
+    return payload.get("role", "user")
 
 
 
