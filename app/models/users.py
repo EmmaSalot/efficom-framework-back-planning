@@ -9,7 +9,7 @@ from typing import List
 class UserRegistration(BaseModel):
     name: str| None = None
     email: EmailStr| None = None
-    password: SecretStr  # Utilisez SecretStr pour une meilleure sécurité
+    password: SecretStr 
     company : str 
 
 class User(BaseModel):
@@ -18,10 +18,9 @@ class User(BaseModel):
     name: str| None = None
     email: EmailStr| None = None
     hashed_password: str| None = None
-    company: str | None = None  # Assumez un simple champ string pour l'exemple, ajustez selon votre modèle
+    company: str | None = None
     activities: List['CreateActivity']| None = None
 
-    # Méthode pour cacher le mot de passe haché dans les sorties
     def dict(self, **kwargs):
         user_dict = super().dict(**kwargs)
         user_dict.pop("hashed_password")

@@ -14,4 +14,5 @@ class CreateCompany(BaseModel):
 class Company(CreateCompany):
     id: str = Field(None, alias='_id')
 
-from models.plannings import CreatePlanning  # Assurez-vous que ce modèle existe
+# Local import to avoid circular import problems
+from models.plannings import CreatePlanning
