@@ -4,8 +4,11 @@
 from typing import Annotated
 
 # Libs imports
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from bson import ObjectId
+from fastapi.security import OAuth2PasswordBearer
+
+
 
 # Local imports
 from models.plannings import CreatePlanning, Planning
@@ -13,6 +16,13 @@ from database import get_plannings_collection
 
 router = APIRouter()
 plannings_collection = get_plannings_collection()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
+async def get_current_user_role(token: str = Depends(oauth2_scheme)):
+    payload = auth.decode_token(token)
+    return payload.get("role", "user")  # Default to "user" role if role information is not present in the token
+
 
 
 @router.get("/plannings", response_model_exclude_unset=True)
@@ -35,10 +45,13 @@ async def get_planning(planning_id: str) -> Planning:
 
 
 @router.post("/plannings", status_code=status.HTTP_201_CREATED, responses={status.HTTP_409_CONFLICT: {"model": str}})
-async def create_planning(planning: CreatePlanning) -> Planning:
+async def create_planning(planning: CreatePlanning,  current_user_role: str = Depends(get_current_user_role)) -> Planning:
     """
     Endpoint to create a new planning and add it to the list of plannings
     """
+    if current_user_role != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins can create plannings")
+
     result = plannings_collection.insert_one(planning.dict())
     planning_id = str(result.inserted_id)
     planning = planning.dict()
@@ -47,10 +60,13 @@ async def create_planning(planning: CreatePlanning) -> Planning:
 
 
 @router.delete("/plannings/{planning_id}", responses={status.HTTP_404_NOT_FOUND: {"model": str}})
-async def delete_planning(planning_id: str) -> None:
+async def delete_planning(planning_id: str, current_user_role: str = Depends(get_current_user_role)) -> None:
     """
     Endpoint to delete a planning
     """
+    if current_user_role != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins can delete plannings")
+
     result = plannings_collection.delete_one({"_id": ObjectId(planning_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Planning not found")

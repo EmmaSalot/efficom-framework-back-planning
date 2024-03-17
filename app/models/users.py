@@ -18,6 +18,7 @@ class User(BaseModel):
     name: str| None = None
     email: EmailStr| None = None
     hashed_password: str| None = None
+    role : str| None = 'user'
     company: str | None = None
     activities: List['CreateActivity']| None = None
 
