@@ -8,7 +8,7 @@ from internal import auth
 from fastapi import APIRouter, HTTPException, status, Depends
 from bson import ObjectId
 from fastapi.security import OAuth2PasswordBearer
-
+from auth import get_user_role_from_token
 
 
 # Local imports
@@ -19,11 +19,6 @@ router = APIRouter()
 plannings_collection = get_plannings_collection()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
-
-async def get_current_user_role(token: str = Depends(oauth2_scheme)):
-    payload = auth.decode_token(token)
-    return payload.get("role", "user")
-
 
 
 @router.get("/plannings", response_model_exclude_unset=True)
@@ -46,10 +41,12 @@ async def get_planning(planning_id: str) -> Planning:
 
 
 @router.post("/plannings", status_code=status.HTTP_201_CREATED, responses={status.HTTP_409_CONFLICT: {"model": str}})
-async def create_planning(planning: CreatePlanning,  current_user_role: str = Depends(get_current_user_role)) -> Planning:
+async def create_planning(planning: CreatePlanning,  token: str = Depends(oauth2_scheme)) -> Planning:
     """
     Endpoint to create a new planning and add it to the list of plannings
     """
+    
+    current_user_role = get_user_role_from_token(token)
     if current_user_role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins can create plannings")
 
@@ -61,10 +58,12 @@ async def create_planning(planning: CreatePlanning,  current_user_role: str = De
 
 
 @router.delete("/plannings/{planning_id}", responses={status.HTTP_404_NOT_FOUND: {"model": str}})
-async def delete_planning(planning_id: str, current_user_role: str = Depends(get_current_user_role)) -> None:
+async def delete_planning(planning_id: str, token: str = Depends(oauth2_scheme)) -> None:
     """
     Endpoint to delete a planning
     """
+    
+    current_user_role = get_user_role_from_token(token)
     if current_user_role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins can delete plannings")
 

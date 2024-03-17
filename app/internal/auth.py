@@ -42,3 +42,12 @@ def authenticate_user(email: str, password: str, db):
     if not verify_password(password, user.hashed_password):
         return False
     return user
+
+
+def get_user_role_from_token(token: str) -> str:
+    """Extract the user role from the JWT token"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload.get("role", "")  # Retourne une chaîne vide si le rôle n'est pas présent dans le token
+    except JWTError:
+        return "" 
