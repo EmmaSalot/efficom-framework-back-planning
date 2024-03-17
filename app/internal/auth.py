@@ -48,6 +48,6 @@ def get_user_role_from_token(token: str) -> str:
     """Extract the user role from the JWT token"""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload.get("role", "")  # Retourne une chaîne vide si le rôle n'est pas présent dans le token
+        return payload.get("role", "")
     except JWTError:
         return "" 

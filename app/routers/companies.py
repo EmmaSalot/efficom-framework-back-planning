@@ -2,16 +2,21 @@
 
 # System libs imports
 from typing import Annotated
+from internal import auth
 
 # Libs imports
 from fastapi import APIRouter, HTTPException, status, Depends
 from bson import ObjectId
+from auth import get_user_role_from_token
+from fastapi.security import OAuth2PasswordBearer
 
 # Local imports
 from models.companies import CreateCompany, Company
 from database import get_companies_collection
 
 router= APIRouter()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 companies_collection = get_companies_collection()
 
@@ -36,10 +41,15 @@ async def getCompany(company_id: str) -> Company:
 
 
 @router.post("/companies", status_code=status.HTTP_201_CREATED, responses={status.HTTP_409_CONFLICT: {"model": str}})
-async def createCompany(company: CreateCompany) -> Company:
+async def createCompany(company: CreateCompany, token: str = Depends(oauth2_scheme) ) -> Company:
     """
     Endpoint to create a new company and add it to the list of companies
     """
+    user_role = get_user_role_from_token(token)
+    
+    if user_role != "sa":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only super admins can create companies")
+    
     existing_company = companies_collection.find_one({"name": company.name})
     if existing_company:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Company name already exists in the system.")
@@ -72,10 +82,15 @@ async def add_user_to_company(company_id: str, user_id: str) -> None:
 
 
 @router.delete("/companies/{company_id}", responses={status.HTTP_404_NOT_FOUND: {"model": str}})
-async def deleteCompany(company_id: str) -> None:
+async def deleteCompany(company_id: str, token: str = Depends(oauth2_scheme)) -> None:
     """
     Endpoint to delete a company
     """
+    user_role = get_user_role_from_token(token)
+    
+    if user_role != "sa":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only super admins can create companies")
+    
     result = companies_collection.delete_one({"_id": ObjectId(company_id)})
     if result.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
