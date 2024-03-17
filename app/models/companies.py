@@ -3,17 +3,15 @@
 from __future__ import annotations
 
 # libs imports
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import List
 
 class CreateCompany(BaseModel):
     name: str | None = None
-    address : str | None = None
-    users : list[CreateUser2] | None = None
-    plannings : list[CreatePlanning] | None = None
+    address: str| None = None
+    plannings: List['CreatePlanning'] | None = None
 
 class Company(CreateCompany):
-    _id: str
+    id: str = Field(None, alias='_id')
 
-#local imports (here to avoid circular import problems)
-from models.users import CreateUser2
-from models.plannings import CreatePlanning
+from models.plannings import CreatePlanning  # Assurez-vous que ce modèle existe

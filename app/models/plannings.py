@@ -3,16 +3,17 @@
 from __future__ import annotations
 
 # libs import
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
+from typing import List
 
 class CreatePlanning(BaseModel):
-    company : 'CreateCompany'
-    activities : list[CreateActivity]
+    # Utilisation d'une référence en avant et rendu optionnel pour éviter une dépendance circulaire directe
+    company: str | None = None
+    # Liste de références en avant pour les activités
+    activities: List['CreateActivity'] | None = None
 
 class Planning(CreatePlanning):
-    id: int
-    
-#local imports (here to avoid circular import problems)
-from models.companies import CreateCompany
-from models.activities import CreateActivity
+    id: str = Field(None, alias='_id')
+
+# Les importations locales sont reportées après les définitions des classes
+from models.activities import CreateActivity  # Assurez-vous que ce modèle existe
