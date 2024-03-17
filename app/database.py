@@ -36,7 +36,7 @@ def get_companies_collection():
     """Get the companies collection from the database"""
     return db['companies']
 
-def get_planings_collection():
+def get_plannings_collection():
     """Get the plannings collection from the database"""
     return db['plannings']
 
